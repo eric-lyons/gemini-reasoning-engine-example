@@ -3,7 +3,6 @@ import requests
 from dotenv import load_dotenv
 from google.cloud import speech
 import yfinance as yf
-from openai.error import InvalidRequestError
 
 import vertexai
 
@@ -28,7 +27,6 @@ lan = os.environ['LANGUAGE']
 max_tokens = os.environ['MAX_TOKENS']
 weather_api_key = os.environ['WEATHER_API_KEY']
 key_path = os.environ['KEY_PATH']
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = key_path
 
 
 def generate_ai_chatbot_response(messages):
@@ -40,7 +38,7 @@ def generate_ai_chatbot_response(messages):
         reply = get_chat_response_function(prompt)
         messages.append({"role": "system", "content": reply})
         return "success", messages
-    except InvalidRequestError as e:
+    except Exception as e:
         return "fail", str(e)
 
 
@@ -77,8 +75,7 @@ def generate_ai_chatbot_response2(prompt):
         # Can improve formatting here:
         reply = gen_string.replace('\n', ' ')
         return reply
-
-    except InvalidRequestError as e:
+    except Exception as e:
         return "fail", str(e)
 
 
@@ -101,7 +98,7 @@ def speech_to_text_gcs(uri):
             text = result.alternatives[0].transcript
 
             return text
-    except InvalidRequestError as e:
+    except Exception as e:
         return "fail", str(e)
 
 
